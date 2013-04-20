@@ -6,6 +6,7 @@ raspberry pi smarthome
 Scopul proiectului: monitorizarea de la distanta a unei incaperi sau a unei zone unde accesul este dificil sau periculos
 
 Exemple de utilizare:
+
 1) uz casnic/rezidential
 - monitorizarea unor parametri de confort sau siguranta prin interfata web (inclusiv smartphone)
 - folosirea unor senzori uzuali (temperatura, umiditate, presiune, gaze, lumiozitate, proximitate etc)
