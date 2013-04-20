@@ -1,0 +1,31 @@
+int analogPinPompaApa=A1;//8
+int analogPinPriza1=A2;//9
+int analogPinLumini=A3;//10
+int analogPinPriza2=A4;//11
+int analogPinElectrovalva=A5;//12
+
+void setup() 
+{
+  Serial.begin(9600);
+}
+
+void loop() {
+
+    while(analogRead(analogPinPompaApa)>600)
+    Serial.println("a");
+    
+    while(analogRead(analogPinPriza1)>600)
+    Serial.println("b");
+    
+    while(analogRead(analogPinLumini)>600)
+    Serial.println("c");
+    
+    while(analogRead(analogPinPriza2)>600)
+    Serial.println("d");
+    
+    while(analogRead(analogPinElectrovalva)>600)
+    Serial.println("e");
+    
+    delay(200);
+
+}
