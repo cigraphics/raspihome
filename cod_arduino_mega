@@ -1,0 +1,191 @@
+
+
+#include <Ultrasonic.h>
+
+#define ECHO_PIN1      23
+#define TRIGGER_PIN1  25 
+
+#define ECHO_PIN2      27
+#define TRIGGER_PIN2   29  
+
+#define ECHO_PIN3      31
+#define TRIGGER_PIN3   33 
+
+#define ECHO_PIN4      35
+#define TRIGGER_PIN4   37  
+
+
+Ultrasonic ultrasonic1(TRIGGER_PIN1, ECHO_PIN1);
+Ultrasonic ultrasonic2(TRIGGER_PIN2, ECHO_PIN2);
+Ultrasonic ultrasonic3(TRIGGER_PIN3, ECHO_PIN3);
+Ultrasonic ultrasonic4(TRIGGER_PIN4, ECHO_PIN4);
+
+// to the pins used:
+const int analogInPin0 = A0;  // Analog input pin 
+const int analogInPin1 = A1;  // Analog input pin 
+const int analogInPin2 = A2;  // Analog input pin 
+const int analogInPin3 = A3;  // Analog input pin 
+const int analogInPin4 = A4;  // Analog input pin 
+const int analogInPin5 = A5;  // Analog input pin 
+int sensorValue0 = 0;        // value read from
+int sensorValue1 = 0;        // value read from
+int sensorValue2 = 0;        // value read from
+int sensorValue3 = 0;        // value read from
+int sensorValue4 = 0;        // value read from
+int sensorValue5 = 0;        // value read from
+
+//Driver FRONT
+int STBYF = 44; //standby
+
+//Motor A
+int PWMAF = 11; //Speed control 
+int AIN1F = 46; //Direction
+int AIN2F = 48; //Direction
+
+//Motor B
+int PWMBF = 9; //Speed control
+int BIN1F = 42; //Direction
+int BIN2F = 40; //Direction
+
+//Driver BACK
+int STBYB = 34; //standby
+//Motor A
+int PWMAB = 8; //Speed control 
+int AIN1B = 36; //Direction  NMBSAD
+int AIN2B = 38; //Direction
+
+//Motor B
+int PWMBB = 10; //Speed control
+int BIN1B = 30; //Direction
+int BIN2B = 32; //Direction
+
+void setup()
+  {
+    pinMode(STBYB, OUTPUT);
+
+  pinMode(PWMAB, OUTPUT);
+  pinMode(AIN1B, OUTPUT);
+  pinMode(AIN2B, OUTPUT);
+
+  pinMode(PWMBB, OUTPUT);
+  pinMode(BIN1B, OUTPUT);
+  pinMode(BIN2B, OUTPUT);
+  
+  pinMode(STBYF, OUTPUT);
+
+  pinMode(PWMAF, OUTPUT);
+  pinMode(AIN1F, OUTPUT);
+  pinMode(AIN2F, OUTPUT);
+
+  pinMode(PWMBF, OUTPUT);
+  pinMode(BIN1F, OUTPUT);
+  pinMode(BIN2F, OUTPUT);
+  Serial.begin(9600);
+  }
+
+void move(int motor, int speed, int direction){
+//Move specific motor at speed and direction
+//motor: 0 for B 1 for A
+//speed: 0 is off, and 255 is full speed
+//direction: 0 clockwise, 1 counter-clockwise
+
+  digitalWrite(STBYF, HIGH); //disable standby
+  
+  digitalWrite(STBYB, HIGH); //disable standby
+
+ // direction = 0
+  boolean inPin1 = LOW;
+  boolean inPin2 = HIGH;
+
+  if(direction == 1){
+    inPin1 = HIGH;
+    inPin2 = LOW;
+  }
+
+  if(motor == 1){
+    digitalWrite(AIN1F, inPin2);
+    digitalWrite(AIN2F, inPin1);
+    analogWrite(PWMAF, speed);
+   }else if(motor == 2){
+     digitalWrite(BIN1F, inPin1);
+    digitalWrite(BIN2F, inPin2);
+    analogWrite(PWMBF, speed);
+   }else if(motor == 3) {
+    digitalWrite(AIN1B, inPin1);
+    digitalWrite(AIN2B, inPin2);
+    analogWrite(PWMAB, speed);
+  }else if(motor==4){
+    digitalWrite(BIN1B, inPin2);
+    digitalWrite(BIN2B, inPin1);
+    analogWrite(PWMBB, speed);
+  }
+  
+}
+
+void stop(){
+//enable standby  
+  digitalWrite(STBYF, LOW); 
+  
+  digitalWrite(STBYB, LOW); 
+}
+void loop()
+  {
+  float cmMsec1,cmMsec2,cmMsec3,cmMsec4;
+  long microsec1 = ultrasonic1.timing();
+  long microsec2 = ultrasonic2.timing();
+  long microsec3 = ultrasonic3.timing();
+  long microsec4 = ultrasonic4.timing();
+   // read the analog in value:
+sensorValue0 = analogRead(analogInPin0);                   
+  sensorValue1= analogRead(analogInPin1);
+  sensorValue2= analogRead(analogInPin2);
+  sensorValue3 = analogRead(analogInPin3); 
+  sensorValue4 = analogRead(analogInPin4); 
+  sensorValue5= analogRead(analogInPin5);   
+  
+  cmMsec1 = ultrasonic1.convert(microsec1, Ultrasonic::CM);
+  cmMsec2 = ultrasonic2.convert(microsec2, Ultrasonic::CM);
+  cmMsec3 = ultrasonic3.convert(microsec3, Ultrasonic::CM);
+  cmMsec4 = ultrasonic4.convert(microsec4, Ultrasonic::CM);
+  
+    move(1, 2300, 1); //motor 1, full speed, left
+    move(2, 200, 1); //motor 2, full speed, left
+    move(3,230, 1); //motor 1, full speed, left
+    move(4, 200, 1); //motor 2, full speed, lef
+  if((sensorValue0<100)&(sensorValue3<100))
+  { move(1, 100, 0); //motor 1, full speed, left
+    move(2, 100, 0); //motor 2, full speed, left
+    move(3, 100, 0); //motor 1, full speed, left
+    move(4, 100, 0); //motor 2, full speed, left
+    
+  }
+  if((cmMsec1<cmMsec2)&(cmMsec1<cmMsec3)&(cmMsec1<cmMsec4))
+  {
+    move(1, 100, 1); //motor 1, full speed, left
+    move(2, 100, 1); //motor 2, full speed, left
+    move(3, 100, 1); //motor 1, full speed, left
+    move(4, 100, 1); //motor 2, full speed, left
+    delay(2000);
+    stop();
+   // Serial.println("1 ");
+ }
+  if((cmMsec2<cmMsec1)&(cmMsec2<cmMsec3)&(cmMsec2<cmMsec4))
+    {
+      Serial.println("2 ");
+    }
+   
+  if((cmMsec3<cmMsec1)&(cmMsec3<cmMsec2)&(cmMsec3<cmMsec4))
+  {
+    Serial.println("3 ");
+  }
+     if((cmMsec2<cmMsec1)&(cmMsec2<cmMsec3)&(cmMsec2<cmMsec4))
+   {
+     Serial.println("2 ");
+   }
+  if((cmMsec4<cmMsec1)&(cmMsec4<cmMsec2)&(cmMsec4<cmMsec3))
+   {
+     Serial.println("4 ");
+   }
+  delay(1000);
+ 
+  }
