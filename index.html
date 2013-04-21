@@ -7,7 +7,7 @@
         <script type="text/javascript" src="/webiopi.js"></script>
         <script type="text/javascript">
 
-  webiopi().ready(function() {
+	webiopi().ready(function() {
                 var content, button;
                 content = $("#button");
 	
@@ -26,8 +26,32 @@
 		button = webiopi().createGPIOButton(24, "Electrovalva");
                 content.append(button);
 
+		// you can also create a button which calls a different function for mouse down and up events
+                button = webiopi().createButton("holdfwd", "FWD", fwdstart, fwdstop);
+                content.append(button);
+
+                button = webiopi().createButton("holdrev", "REV", revstart, revstop);
+                content.append(button);
+
 		w().refreshGPIO(true);
 	});
+
+	function fwdstart() {
+                webiopi().digitalWrite(22, 1);
+        }
+        
+        function fwdstop() {
+                webiopi().digitalWrite(22, 0);
+        }
+
+        function revstart() {
+                webiopi().digitalWrite(22, 1);
+        }
+       
+        function revstop() {
+                webiopi().digitalWrite(22, 0);
+        }
+
         </script>
         <style type="text/css">
                 button {
@@ -58,5 +82,6 @@
 </head>
 <body>
         <div id="button" align="center"></div>
+<!- <img src="http://192.168.1.100:8080/?action=stream" /> -->
 </body>
 </html>
