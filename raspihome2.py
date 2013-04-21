@@ -9,18 +9,18 @@ GPIO = webiopi.GPIO
 # -------------------------------------------------- #
 
 # Buttons
-B1=17
-B2=27
-B3=22
-B4=23
-B5=24
+B1=17   # pompa apa
+B2=27   # incalzire podea
+B3=22   # lumini
+B4=23   # dezumidificator
+B5=24   # electrovalva
 
     
 # -------------------------------------------------- #
 # Initialization part                                #
 # -------------------------------------------------- #
 
-# Setup GPIOs
+# Setup GPIOs - toate porturile sunt de iesire
 GPIO.setFunction(B1, GPIO.OUT)
 GPIO.setFunction(B2, GPIO.OUT)
 GPIO.setFunction(B3, GPIO.OUT)
@@ -33,7 +33,7 @@ GPIO.setFunction(B5, GPIO.OUT)
 
 
 # Instantiate the server on the port 8000, it starts immediately in its own thread
-server = webiopi.Server(port=8000, login="cambot", password="cambot")
+server = webiopi.Server(port=8000, login="raspihome", password="raspihome")
 
 # -------------------------------------------------- #
 # Loop execution part                                #
