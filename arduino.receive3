@@ -1,0 +1,51 @@
+int PinPompaApa=2;
+int PinPriza1=4;
+int PinLumini=7;
+int PinPriza2=8;
+int PinElectrovalva=12;
+
+
+void setup() 
+{                
+  Serial.begin(9600);
+  pinMode(PinPompaApa, OUTPUT);
+  pinMode(PinPriza1, OUTPUT);
+  pinMode(PinLumini, OUTPUT);
+  pinMode(PinPriza2, OUTPUT);
+  pinMode(PinElectrovalva, OUTPUT);  
+}
+
+
+void loop()
+{
+  if (Serial.available())
+  {
+    char val=Serial.read();
+    Serial.print(val);
+    
+    if(val=='a')
+      digitalWrite(PinPompaApa, HIGH);           
+    if(val=='b')  
+      digitalWrite(PinPompaApa, LOW);   
+
+    if(val=='c')
+      digitalWrite(PinPriza1, HIGH);              
+    if(val=='d')  
+      digitalWrite(PinPriza1, LOW);   
+
+    if(val=='e')
+      digitalWrite(PinLumini, HIGH);             
+    if(val=='f')  
+      digitalWrite(PinLumini, LOW);   
+
+    if(val=='g')
+      digitalWrite(PinPriza2, HIGH);
+    if(val=='h')      
+      digitalWrite(PinPriza2, LOW);   
+  
+    if(val=='i')
+      digitalWrite(PinElectrovalva, HIGH);        
+    if(val=='j')
+      digitalWrite(PinElectrovalva, LOW);
+  }
+}
